@@ -52,5 +52,5 @@ bugzilla_query() {
         /bin/bugzilla login
     fi
 
-    /bin/bugzilla query -p "$product $version" -c "$3" -t "$bug_state"
+    /bin/bugzilla query -p "$product $version" -c "$3" -t "$bug_state" | sed s/#// | sort -n
 }
