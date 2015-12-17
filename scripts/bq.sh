@@ -3,7 +3,7 @@
 # simple function to query component bugs in given RHEL/Fedora with given state
 bugzilla_query() {
 
-    local usage="usage: bq {-5|-6|-7|-f} {-n|-q|-p|-v|-c} COMPONENT"
+    local usage="usage: bq {-5|-6|-7|-f} {-n|-q|-m|-v|-c} COMPONENT"
     local bin="/bin/bugzilla"
     local bug_state=""
     local product=""
