@@ -33,8 +33,8 @@ bugzilla_query() {
             bug_state="NEW,ASSIGNED";;
         -q)
             bug_state="ON_QA";;
-        -p)
-            bug_state="POST";;
+        -m)
+            bug_state="POST,MODIFIED";;
         -v)
             bug_state="VERIFIED";;
         -c)
