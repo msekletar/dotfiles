@@ -6,6 +6,9 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
 
+; always start server at startup
+(server-start)
+
 ;; set default mail address for emacs to use
 (setq user-mail-address "msekleta@redhat.com")
 
@@ -13,46 +16,46 @@
 (require 'uniquify)
 (setq  uniquify-buffer-name-style 'post-forward )
 
-;; make emacs look good
-(provide 'init-themes)
+;; add folder with my own LISP extensions to load path
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-;(load-theme 'github t)
 
+; turn off weird bell sound
+(setq ring-bell-function 'ignore)
 
-;; turn on yasnippet
+; turn on yasnippet
 (require 'yasnippet)
 (yas-global-mode 1)
 
-;; turn off unwanted *bars
+; turn off unwanted *bars
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (blink-cursor-mode 0)
 
-;; turn on ido mode
+; show matching parentheses
+(show-paren-mode 1)
+
+; turn on ido mode
 (require 'flx-ido)
 (ido-mode t)
 (ido-everywhere t)
 (setq ido-use-faces nil)
 
-;; do not display emacs splash screen on start-up
+; do not display emacs splash screen on start-up
 (setq inhibit-splash-screen t)
 
-;; save backup files to ~/.saves 
+; save backup files to ~/.saves 
 (setq backup-directory-alist `(("." . "~/.saves")))
 
-;; don't indent with tabs because they are usefull as hole in the head
+; don't indent with tabs because they are usefull as hole in the head
 (setq-default indent-tabs-mode nil)
 
-;; in cc-mode indent offset is 8 spaces
+; in cc-mode indent offset is 8 spaces
 (setq c-basic-offset 8)
 
-;; wrap at 80 columns in c mode
+; wrap at 80 columns in c mode
 (add-hook 'c-mode-common-hook
   '(lambda() (set-fill-column 80)))
-(add-hook 'c-mode-common-hook
-  '(lambda() (linum-mode)))
 
 ;; wrap at 80 columns in text mode
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -73,60 +76,200 @@
 
 ;; proper formatting of git commit messages
 (add-hook 'git-commit-mode-hook 'turn-on-flyspell)
-(add-hook 'git-commit-mode-hook (lambda () (toggle-save-place 0)))
 
-;; use rpm-spec-mode when editing specfile
-(autoload 'rpm-spec-mode "rpm-spec-mode.el" "RPM spec mode." t)
-(setq auto-mode-alist (append '(("\\.spec" . rpm-spec-mode))
-			      auto-mode-alist))
-
-;; use auto-completion with clang support
-(require 'auto-complete-config)
-(ac-config-default)
-
-(require 'auto-complete-clang-async)
-(defun ac-cc-mode-setup ()
-  (setq ac-clang-complete-executable "~/.emacs.d/clang-complete")
-  (setq ac-sources '(ac-source-clang-async))
-  (ac-clang-launch-completion-process)
-)
-
-(defun my-ac-config ()
-  (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
-  (add-hook 'auto-complete-mode-hook 'ac-common-setup)
-  (global-auto-complete-mode t))
-
-(my-ac-config)
-
-;; compilation mode settings
-(setq compile-command "make -j4 -k")
+; compilation mode settings
+(setq compile-command "make -j4")
 (setq compilation-scroll-output t)
 (setq compilation-always-kill t)
 (setenv "GCC_COLORS" "")
 
+; helm config
 (require 'helm-git-grep) ;; Not necessary if installed by package.el
 (global-set-key (kbd "C-c g") 'helm-git-grep)
-;; Invoke `helm-git-grep' from isearch.
+; Invoke `helm-git-grep' from isearch.
 (define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
-;; Invoke `helm-git-grep' from other helm.
+; Invoke `helm-git-grep' from other helm.
 (eval-after-load 'helm
   '(define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm))
 
-(require 'fill-column-indicator)
-
+; use ssh method for tramp by default
 (require 'tramp)
+(setq tramp-default-method "ssh")
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector ["color-237" "#d75f5f" "#afaf00" "#ffaf00" "#87afaf" "#d787af" "#87af87" "color-223"])
- '(ansi-term-color-vector [unspecified "#202020" "#ac4142" "#90a959" "#f4bf75" "#6a9fb5" "#aa759f" "#6a9fb5" "#e0e0e0"] t)
- '(custom-safe-themes (quote ("42ac06835f95bc0a734c21c61aeca4286ddd881793364b4e9bc2e7bb8b6cf848" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "a99e7c91236b2aba4cd374080c73f390c55173c5a1b4ac662eeb3172b60a9814" "134f38000f413a88743764983c751ac34edbec75a602065e2ae3b87fcf26c451" "ad9fc392386f4859d28fe4ef3803585b51557838dbc072762117adad37e83585" "96efbabfb6516f7375cdf85e7781fe7b7249b6e8114676d65337a1ffe78b78d9" "de2c46ed1752b0d0423cde9b6401062b67a6a1300c068d5d7f67725adc6c3afb" "e16a771a13a202ee6e276d06098bc77f008b73bbac4d526f160faa2d76c1dd0e" "bd115791a5ac6058164193164fd1245ac9dc97207783eae036f0bfc9ad9670e0" "978ff9496928cc94639cb1084004bf64235c5c7fb0cfbcc38a3871eb95fa88f6" "f0a99f53cbf7b004ba0c1760aa14fd70f2eabafe4e62a2b3cf5cabae8203113b" "1e194b1010c026b1401146e24a85e4b7c545276845fc38b8c4b371c8338172ad" "454dc6f3a1e9e062f34c0f988bcef5d898146edc5df4aa666bf5c30bed2ada2e" "53e29ea3d0251198924328fd943d6ead860e9f47af8d22f0b764d11168455a8e" "e53cc4144192bb4e4ed10a3fa3e7442cae4c3d231df8822f6c02f1220a0d259a" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "dc758223066a28f3c6ef6c42c9136bf4c913ec6d3b710794252dc072a3b92b14" "bf648fd77561aae6722f3d53965a9eb29b08658ed045207fe32ffed90433eb52" "f41fd682a3cd1e16796068a2ca96e82cfd274e58b978156da0acce4d56f2b0d5" "41b6698b5f9ab241ad6c30aea8c9f53d539e23ad4e3963abff4b57c0f8bf6730" "f7a22b2ae325554a467d01202e0b3fc25b76c37b04db8fcef9ce65e361144b3e" "90b5269aefee2c5f4029a6a039fb53803725af6f5c96036dee5dc029ff4dff60" "90af7d0da6b97c28098177271c1d9198234435a2d1874880ba36e5bdae9da113" "c7359bd375132044fe993562dfa736ae79efc620f68bab36bd686430c980df1c" "ce79400f46bd76bebeba655465f9eadf60c477bd671cbcd091fe871d58002a88" "a774c5551bc56d7a9c362dca4d73a374582caedb110c201a09b410c0ebbb5e70" "0ebe0307942b6e159ab794f90a074935a18c3c688b526a2035d14db1214cf69c" "53c542b560d232436e14619d058f81434d6bbcdc42e00a4db53d2667d841702e" "9bcb8ee9ea34ec21272bb6a2044016902ad18646bd09fdd65abae1264d258d89" "e26780280b5248eb9b2d02a237d9941956fc94972443b0f7aeec12b5c15db9f3" "33c5a452a4095f7e4f6746b66f322ef6da0e770b76c0ed98a438e76c497040bb" "9bac44c2b4dfbb723906b8c491ec06801feb57aa60448d047dbfdbd1a8650897" "1affe85e8ae2667fb571fc8331e1e12840746dae5c46112d5abb0c3a973f5f5a" default))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
+; awesome virt-manager
+(require 'virt-manager)
+
+; use ibuffer of C-x C-b
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(autoload 'ibuffer "ibuffer" "List buffers." t)
+
+; custom keyboard shortcuts
+(global-set-key (kbd "C-x g") 'magit-status)
+(setq magit-last-seen-setup-instructions "1.4.0")
+(global-set-key (kbd "C-c C-k") 'compile)
+
+; view manpage
+(global-set-key "\C-cw"
+                (lambda ()
+                  (interactive)
+                  (let ((woman-use-topic-at-point t))
+                    (woman))))
+
+; kernel coding style for ~/devel/upstream/kernel
+(defun c-lineup-arglist-tabs-only (ignored)
+  "Line up argument lists by tabs, not spaces"
+  (let* ((anchor (c-langelem-pos c-syntactic-element))
+	 (column (c-langelem-2nd-pos c-syntactic-element))
+	 (offset (- (1+ column) anchor))
+	 (steps (floor offset c-basic-offset)))
+    (* (max steps 1)
+       c-basic-offset)))
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            ;; Add kernel style
+            (c-add-style
+             "linux-tabs-only"
+             '("linux" (c-offsets-alist
+                        (arglist-cont-nonempty
+                         c-lineup-gcc-asm-reg
+                         c-lineup-arglist-tabs-only))))))
+
+(add-hook 'c-mode-hook
+          (lambda ()
+            (let ((filename (buffer-file-name)))
+              ;; Enable kernel mode for the appropriate files
+              (when (and filename
+                         (string-match (expand-file-name "~/devel/upstream/net-next")
+                                       filename))
+                (setq indent-tabs-mode t)
+                (setq show-trailing-whitespace t)
+                (c-set-style "linux-tabs-only")))))
+
+;; function to cleanup and indent buffer
+(defun iwb ()
+  "indent whole buffer"
+  (interactive)
+  (delete-trailing-whitespace)
+  (indent-region (point-min) (point-max) nil)
+  (untabify (point-min) (point-max)))
+
+;; org mode settings
+(setq org-directory "~/Documents/gtd")
+
+;; org-capture settings
+(setq org-default-notes-file (concat org-directory "/inbox.org"))
+
+;; org archive
+;(setq org-archive-location (concat org-directory "/gtd_archive.org"))
+
+;; some useful shortcuts
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-cb" 'org-iswitchb)
+
+;; enable fly-spell for org, emails and git commit messages
+(dolist (hook '(org-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(mail-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(git-commit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+
+;; use irony-mode for code completion
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+;; replace the `completion-at-point' and `complete-symbol' bindings in
+;; irony-mode's buffers by irony-mode's function
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; company mode setup
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(setq company-backends (delete 'company-semantic company-backends))
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
+
+(defun ignore-error-wrapper (fn)
+  "Funtion return new function that ignore errors.
+   The function wraps a function with `ignore-errors' macro."
+  (lexical-let ((fn fn))
+    (lambda ()
+      (interactive)
+      (ignore-errors
+        (funcall fn)))))
+
+; easier navigation between split windows (Shift + arrow keys)
+(global-set-key [s-left] (ignore-error-wrapper 'windmove-left))
+(global-set-key [s-right] (ignore-error-wrapper 'windmove-right))
+(global-set-key [s-up] (ignore-error-wrapper 'windmove-up))
+(global-set-key [s-down] (ignore-error-wrapper 'windmove-down))
+
+;; gofmt to format the code before buffer is saved
+(add-hook 'before-save-hook 'gofmt-before-save)
+
+;; bind remove unused imports to C-c C-r
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
+
+;; bind go to imports to C-c i
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "C-c i") 'go-goto-imports)))
+
+;; cscope with helm
+(require 'xcscope)
+(cscope-setup)
+(setq cscope-index-recursively t)
+(setq cscope-option-do-not-update-database t)
+(setq cscope-option-use-inverted-index t)
+
+;; Enable helm-cscope-mode
+(add-hook 'c-mode-hook 'helm-cscope-mode)
+(add-hook 'c++-mode-hook 'helm-cscope-mode)
+;; Set key bindings
+(eval-after-load "helm-cscope"
+  '(progn
+     (define-key helm-cscope-mode-map (kbd "M-t") 'helm-cscope-find-this-symbol)
+     (define-key helm-cscope-mode-map (kbd "M-r") 'helm-cscope-find-global-definition)
+     (define-key helm-cscope-mode-map (kbd "M-g M-c") 'helm-cscope-find-called-function)
+     (define-key helm-cscope-mode-map (kbd "M-g M-p") 'helm-cscope-find-calling-this-funtcion)
+     (define-key helm-cscope-mode-map (kbd "M-s") 'helm-cscope-select)))
+
+(defun push-mark-no-activate ()
+  "Pushes `point' to `mark-ring' and does not activate the region
+   Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
+  (interactive)
+  (push-mark (point) t nil)
+  (message "Pushed mark to ring"))
+
+(global-set-key (kbd "C-`") 'push-mark-no-activate)
+(global-set-key (kbd "C-h ;") 'helm-info-libc)
+
+;; go mode setting
+(add-to-list 'exec-path "/home/msekleta/dev/go/bin")
+
+(defun my-go-mode-hook ()
+  (local-set-key (kbd "M-.") 'godef-jump)
+  (set (make-local-variable 'company-backends) '(company-go)))
+
+(add-hook 'before-save-hook 'gofmt-before-save)
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+
+;; interpret vim modeline in emacs
+(require 'vim-modeline)
+(add-to-list 'find-file-hook 'vim-modeline/do)
+
+;; completing filenames in buffer
+(fset 'my-complete-file-name
+      (make-hippie-expand-function '(try-complete-file-name-partially
+                                     try-complete-file-name)))
+(global-set-key "\M-\\" 'my-complete-file-name)
