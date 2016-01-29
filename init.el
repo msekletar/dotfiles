@@ -273,3 +273,6 @@
       (make-hippie-expand-function '(try-complete-file-name-partially
                                      try-complete-file-name)))
 (global-set-key "\M-\\" 'my-complete-file-name)
+
+;; eval local variables
+(setq enable-local-eval t)
