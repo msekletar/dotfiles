@@ -276,3 +276,5 @@
 
 ;; eval local variables
 (setq enable-local-eval t)
+
+(load-theme 'monokai t)
