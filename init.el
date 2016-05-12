@@ -287,6 +287,14 @@
 ;; easy spell check
 (global-set-key (kbd "<f8>") 'ispell-word)
 (global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+
+(defun mycompile ()
+  (interactive)
+  (compile "make -j4"))
+
+(global-set-key (kbd "<f5>") 'mycompile)
+
+
 ;; eval local variables
 (setq enable-local-eval t)
 
