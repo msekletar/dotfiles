@@ -274,6 +274,9 @@
                                      try-complete-file-name)))
 (global-set-key "\M-\\" 'my-complete-file-name)
 
+;; easy spell check
+(global-set-key (kbd "<f8>") 'ispell-word)
+(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
 ;; eval local variables
 (setq enable-local-eval t)
 
