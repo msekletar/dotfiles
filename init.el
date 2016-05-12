@@ -225,6 +225,16 @@
 (add-hook 'go-mode-hook (lambda ()
                           (local-set-key (kbd "C-c i") 'go-goto-imports)))
 
+;; make easy to jump around in go code
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "M-.") 'godef-jump)))
+;; load go-autocomplete when in go-mode
+(with-eval-after-load 'go-mode
+  (require 'go-autocomplete))
+
+(add-hook 'go-mode-hook (lambda ()
+                          (auto-complete-mode 1)))
+
 ;; cscope with helm
 (require 'xcscope)
 (cscope-setup)
