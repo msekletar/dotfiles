@@ -96,9 +96,6 @@
 (require 'tramp)
 (setq tramp-default-method "ssh")
 
-; awesome virt-manager
-(require 'virt-manager)
-
 ; use ibuffer of C-x C-b
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (autoload 'ibuffer "ibuffer" "List buffers." t)
@@ -273,10 +270,6 @@
 
 (add-hook 'before-save-hook 'gofmt-before-save)
 (add-hook 'go-mode-hook 'my-go-mode-hook)
-
-;; interpret vim modeline in emacs
-(require 'vim-modeline)
-(add-to-list 'find-file-hook 'vim-modeline/do)
 
 ;; completing filenames in buffer
 (fset 'my-complete-file-name
