@@ -312,3 +312,12 @@
 ;; Exclude bold/italic from keywords
 (setq font-latex-deactivated-keyword-classes
       '("italic-command" "bold-command" "italic-declaration" "bold-declaration"))
+
+;; Do not change font size for outlines in org-mode
+(custom-set-faces
+  '(org-level-1 ((t (:inherit outline-1 :height 1.0))))
+  '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+  '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+  '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+)
